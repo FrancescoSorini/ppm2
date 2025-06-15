@@ -1,28 +1,32 @@
 from rest_framework import permissions
 
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
-    Custom permission to only allow owners of an object to edit it.
-    Others can only read the object.
+    Permesso customizzato che consente agli utenti di modificare solo gli oggetti che possiedono.
     """
 
     def has_object_permission(self, request, view, obj):
-        # Read permissions are allowed to any request,
-        # so we'll always allow GET, HEAD or OPTIONS requests.
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Write permissions are only allowed to the owner of the object.
         return obj.owner == request.user
 
 
 class IsAdminUser(permissions.BasePermission):
     """
-    Custom permission to only allow admin users to access certain views.
+    Solo gli admin possono modificare, altri solo in lettura.
     """
 
     def has_permission(self, request, view):
-        # Check if the user is authenticated and is an admin
+        # Controlla se l'utente è autenticato e se è un admin
         return request.user and request.user.is_authenticated and request.user.is_staff
 
 
+class IsSelfOrAdmin(permissions.BasePermission):
+    """
+    Permette l'accesso solo se l'utente è sé stesso o è admin.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj or request.user.is_staff
