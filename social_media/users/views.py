@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import CustomUser
@@ -15,7 +14,12 @@ class ListCreateUserView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save()  # Salva l'utente con i dati validati
+        user = serializer.validated_data.get('username')
+        if CustomUser.objects.filter(username=user).exists():
+            raise ValueError("Un utente con questo nome utente esiste già.")
+
+        bio = serializer.validated_data.get('bio', '')
+        serializer.save(username=user, bio=bio)
 
 
 class RetrieveUpdateDestroyUserView(generics.RetrieveUpdateDestroyAPIView):
@@ -30,7 +34,5 @@ class RetrieveUpdateDestroyUserView(generics.RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         serializer.save()  # Salva le modifiche all'utente con i dati validati
 
-
     def perform_destroy(self, instance):
         instance.delete()  # Elimina l'utente specificato
-

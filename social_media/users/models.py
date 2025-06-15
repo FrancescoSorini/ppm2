@@ -5,21 +5,15 @@ class CustomUser(AbstractUser):
     username = models.CharField(
         max_length=150,
         unique=True,
-        error_messages={
-            'unique': "A user with that username already exists."
-        }
+        #error_messages={'unique': "A user with that username already exists."}
     )
     bio = models.TextField(blank=True, null=True)
-    followers = models.ManyToManyField('self',
+    followers = models.ManyToManyField(
+        'self',
         symmetrical=False,
         related_name='following',
         blank=True,
-        help_text="Users that this user follows."
     )
 
     def __str__(self):
         return self.username
-
-
-
-
