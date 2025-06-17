@@ -1,38 +1,47 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+
+from .permissions import IsSelfOrAdmin
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
 
-class ListCreateUserView(generics.ListCreateAPIView):
+class ListCreateUserAPIView(generics.ListCreateAPIView):
     """
-    Vista per elencare e creare nuovi utenti.
-    Supporta la visualizzazione di tutti gli utenti
-    """
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        user = serializer.validated_data.get('username')
-        if CustomUser.objects.filter(username=user).exists():
-            raise ValueError("Un utente con questo nome utente esiste già.")
-
-        bio = serializer.validated_data.get('bio', '')
-        serializer.save(username=user, bio=bio)
-
-
-class RetrieveUpdateDestroyUserView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Vista per recuperare, aggiornare o eliminare un utente specifico.
-    Supporta la visualizzazione, l'aggiornamento e l'eliminazione di un utente specifico
+    Elenca tutti gli utenti (solo admin) o consente la registrazione.
     """
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
 
-    def perform_update(self, serializer):
-        serializer.save()  # Salva le modifiche all'utente con i dati validati
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.AllowAny()]
+        return [permissions.IsAdminUser()]
 
-    def perform_destroy(self, instance):
-        instance.delete()  # Elimina l'utente specificato
+
+class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Permette all'utente di visualizzare, modificare o eliminare sé stesso.
+    Oppure accesso admin per gestire tutti.
+    """
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSelfOrAdmin]
+
+
+class CustomAuthToken(ObtainAuthToken):
+    """
+    Restituisce token + info utente dopo login.
+    """
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        user = token.user
+        return Response({
+            'token': token.key,
+            'user_id': user.id,
+            'username': user.username,
+            'email': user.email
+        })
