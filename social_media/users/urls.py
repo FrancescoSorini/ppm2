@@ -3,6 +3,7 @@ from .views import (
     ListCreateUserAPIView,
     UserRetrieveUpdateDestroyAPIView,
     CustomAuthToken,
+    login_view
 )
 
 urlpatterns = [
@@ -12,7 +13,10 @@ urlpatterns = [
     # Recupera, aggiorna o cancella un utente (solo admin o self)
     path('users/<int:pk>/', UserRetrieveUpdateDestroyAPIView.as_view(), name='get-update-delete-user'),
 
+    # Login tramite username e password
+    path('login/', login_view, name='users-login'),
+
     # Login tramite token
-    path('login/', CustomAuthToken.as_view(), name='users-login'),
+    path('token-login/', CustomAuthToken.as_view(), name='users-login'),
 ]
 

@@ -2,6 +2,10 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
+from django.contrib.auth import authenticate
+from rest_framework import status
 
 from .permissions import IsSelfOrAdmin
 from .models import CustomUser
@@ -45,3 +49,27 @@ class CustomAuthToken(ObtainAuthToken):
             'username': user.username,
             'email': user.email
         })
+
+# vista api per effettuare il login e restituire il token
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+def login_view(request):
+    if request.method == 'GET':
+        return Response({
+            "message": "Usa POST con username e password per ottenere un token."
+        })
+
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = authenticate(username=username, password=password)
+    if user:
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'bio': user.bio,
+        })
+    return Response({'error': 'Credenziali non valide'}, status=status.HTTP_401_UNAUTHORIZED)
