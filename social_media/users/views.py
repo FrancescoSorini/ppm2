@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.views import ObtainAuthToken, APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate
@@ -39,6 +39,7 @@ class CustomAuthToken(ObtainAuthToken):
     """
     Restituisce token + info utente dopo login.
     """
+
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
@@ -49,6 +50,22 @@ class CustomAuthToken(ObtainAuthToken):
             'username': user.username,
             'email': user.email
         })
+
+
+class CurrentUserAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'bio': user.bio,
+            'is_staff': user.is_staff,
+
+        })
+
 
 # vista api per effettuare il login e restituire il token
 @api_view(['GET', 'POST'])
