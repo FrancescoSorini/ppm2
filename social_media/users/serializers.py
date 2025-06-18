@@ -14,12 +14,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     # metodo per validare i dati in ingresso
     def create(self, validated_data):
-        password = validated_data.pop('password', None)  # estrai la password per gestirla separatamente
+        password = validated_data.pop('password', None)
         if not password:
             raise serializers.ValidationError({"password": "La password è obbligatoria."})
-        validated_data['password'] = make_password(password)
 
-        user = CustomUser.objects.create_user(**validated_data)
+        user = CustomUser.objects.create_user(password=password, **validated_data)
         return user
 
     # aggiornamento custom per dati parziali
