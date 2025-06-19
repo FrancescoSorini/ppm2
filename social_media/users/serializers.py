@@ -1,10 +1,13 @@
 from rest_framework import serializers
 from .models import CustomUser
-from django.contrib.auth.hashers import make_password
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
+
+    # visualizzazione dei campi followers e following tramite username
+    followers = serializers.SlugRelatedField(many=True, slug_field='username', read_only=True)
+    following = serializers.SlugRelatedField(many=True, slug_field='username', read_only=True)
 
     # Meta definisce le proprietà del modello da serializzare
     class Meta:
