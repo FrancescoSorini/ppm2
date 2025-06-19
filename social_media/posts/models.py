@@ -2,6 +2,8 @@ from django.db import models
 from users.models import CustomUser
 
 
+#TODO: Migrazioni per creare le tabelle nel database
+
 class Post(models.Model):
     author = models.ForeignKey(
         CustomUser,
