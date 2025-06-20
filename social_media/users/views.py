@@ -100,6 +100,8 @@ def follow_user(request, username):
 
     if request.user == target_user:
         return Response({"detail": "Non puoi seguire te stesso."}, status=400)
+    if target_user in request.user.following.all():
+        return Response({"detail": f"Stai già seguendo {target_user.username}."}, status=409)
     request.user.following.add(target_user)
     return Response({"detail": f"Ora segui {target_user.username}."})
 

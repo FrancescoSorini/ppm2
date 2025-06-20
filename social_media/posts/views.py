@@ -14,7 +14,7 @@ class PostListCreateView(generics.ListCreateAPIView):
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -51,3 +51,33 @@ def toggle_like_post(request, slug):
     else:
         post.likes.add(request.user)
         return Response({'message': 'Hai messo mi piace!'}, status=status.HTTP_200_OK)
+
+
+# Commentare un post specifico
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def create_comment(request, slug):
+    """
+    Crea un commento su un post specifico.
+    """
+    post = get_object_or_404(Post, slug=slug)
+    serializer = CommentSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save(author=request.user, post=post)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Elencare i commenti di un post specifico
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
+def list_comments(request, slug):
+    """
+    Elenca tutti i commenti di un post specifico.
+    """
+    post = get_object_or_404(Post, slug=slug)
+    comments = post.comments.all().order_by('-created_at')
+    serializer = CommentSerializer(comments, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

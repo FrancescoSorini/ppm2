@@ -15,16 +15,15 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(CustomUser, related_name='liked_posts', blank=True)
-
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
 
     def __str__(self):
-        return f"Post di {self.author.username} - {self.created_at.strftime('%d-%m-%Y %H:%M:%S')}"
+        return f"Post: {self.title} - di {self.author.username} - {self.created_at.strftime('%d-%m-%Y %H:%M:%S')}"
 
-
-    # Override del metodo save per generare uno titolo (dal contenuto) unico se non fornito
+    # Override del metodo save per generare uno titolo unico se non fornito
     def save(self, *args, **kwargs):
-        if not self.title:
-            base_slug = slugify(self.content[:30])
+        if not self.slug:
+            base_slug = slugify(self.title)
             unique_slug = base_slug
             counter = 1
             while Post.objects.filter(slug=unique_slug).exists():
