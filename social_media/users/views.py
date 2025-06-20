@@ -92,11 +92,11 @@ def login_view(request):
     return Response({'error': 'Credenziali non valide'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# Funzione per seguire utenti (tramite id)
+# Funzione per seguire utenti (tramite username)
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def follow_user(request, user_id):
-    target_user = get_object_or_404(CustomUser, id=user_id)
+def follow_user(request, username):
+    target_user = get_object_or_404(CustomUser, username=username)
 
     if request.user == target_user:
         return Response({"detail": "Non puoi seguire te stesso."}, status=400)
@@ -104,11 +104,11 @@ def follow_user(request, user_id):
     return Response({"detail": f"Ora segui {target_user.username}."})
 
 
-# Funzione per smettere di seguire utenti (tramite id)
+# Funzione per smettere di seguire utenti (tramite username)
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def unfollow_user(request, user_id):
-    target_user = get_object_or_404(CustomUser, id=user_id)
+def unfollow_user(request, username):
+    target_user = get_object_or_404(CustomUser, username=username)
     if request.user == target_user:
         return Response({"detail": "Non puoi smettere di seguire te stesso."}, status=400)
     if target_user not in request.user.following.all():

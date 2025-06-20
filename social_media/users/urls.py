@@ -30,10 +30,10 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
 
     # Segui un utente
-    path('users/<int:user_id>/follow/', follow_user, name='follow-user'),
+    path('users/<str:username>/follow/', follow_user, name='follow-user'),
 
     # Smetti di seguire un utente
-    path("users/<int:user_id>/unfollow/", unfollow_user, name="unfollow-user"),
+    path("users/<str:username>/unfollow/", unfollow_user, name="unfollow-user"),
 
     #cerca utente per username
     path('users/search/', search_users, name='search-users'),
