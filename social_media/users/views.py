@@ -14,7 +14,7 @@ from .serializers import CustomUserSerializer
 
 class ListCreateUserAPIView(generics.ListCreateAPIView):
     """
-    Elenca tutti gli utenti (solo admin) o consente la registrazione.
+    Elenca tutti gli utenti o consente la registrazione.
     """
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -92,6 +92,7 @@ def login_view(request):
     return Response({'error': 'Credenziali non valide'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+# Funzione per seguire utenti (tramite id)
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def follow_user(request, user_id):
@@ -103,6 +104,7 @@ def follow_user(request, user_id):
     return Response({"detail": f"Ora segui {target_user.username}."})
 
 
+# Funzione per smettere di seguire utenti (tramite id)
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def unfollow_user(request, user_id):
@@ -115,6 +117,7 @@ def unfollow_user(request, user_id):
     return Response({"detail": f"Hai smesso di seguire {target_user.username}."})
 
 
+# Funzione per cercare utenti per username (usando query string)
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def search_users(request):
