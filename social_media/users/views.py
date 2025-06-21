@@ -35,36 +35,13 @@ class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsSelfOrAdmin]
 
 
-class CustomAuthToken(ObtainAuthToken):
-    """
-    Restituisce token + info utente dopo login.
-    """
-
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        token = Token.objects.get(key=response.data['token'])
-        user = token.user
-        return Response({
-            'token': token.key,
-            'user_id': user.id,
-            'username': user.username,
-            'email': user.email
-        })
-
 
 class CurrentUserAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        user = request.user
-        return Response({
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'bio': user.bio,
-            'is_staff': user.is_staff,
-
-        })
+        serializer = CustomUserSerializer(request.user)
+        return Response(serializer.data)
 
 
 # vista api per effettuare il login e restituire il token

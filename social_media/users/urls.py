@@ -2,7 +2,6 @@ from django.urls import path, include
 from .views import (
     ListCreateUserAPIView,
     UserRetrieveUpdateDestroyAPIView,
-    CustomAuthToken,
     login_view,
     CurrentUserAPIView,
     follow_user,
@@ -12,30 +11,26 @@ from .views import (
 
 urlpatterns = [
     # Registrazione nuovi utenti (POST) | Lista utenti (GET)
-    path("users/", ListCreateUserAPIView.as_view(), name="create-list-users"),
+    path("users", ListCreateUserAPIView.as_view(), name="create-list-users"),
 
     # Recupera, aggiorna o cancella un utente (solo admin o self)
-    path('users/<int:pk>/', UserRetrieveUpdateDestroyAPIView.as_view(), name='get-update-delete-user'),
+    path('<int:pk>', UserRetrieveUpdateDestroyAPIView.as_view(), name='get-update-delete-user'),
 
     # Recupera l'utente corrente
-    path('users/me', CurrentUserAPIView.as_view(), name='current-user'),
+    path('me', CurrentUserAPIView.as_view(), name='current-user'),
 
     # Login tramite username e password
-    path('login/', login_view, name='users-login'),
-
-    # Login tramite token
-    path('token-login/', CustomAuthToken.as_view(), name='users-login'),
+    path('login', login_view, name='users-login'),
 
     # Autenticazione tramite token
-    path('api-auth/', include('rest_framework.urls')),
+    path('api-auth', include('rest_framework.urls')),
 
     # Segui un utente
-    path('users/<str:username>/follow/', follow_user, name='follow-user'),
+    path('<str:username>/follow', follow_user, name='follow-user'),
 
     # Smetti di seguire un utente
-    path("users/<str:username>/unfollow/", unfollow_user, name="unfollow-user"),
+    path("<str:username>/unfollow", unfollow_user, name="unfollow-user"),
 
-    #cerca utente per username
-    path('users/search/', search_users, name='search-users'),
+    #cerca utente per username con /?q=username
+    path('search/', search_users, name='search-users'),
 ]
-

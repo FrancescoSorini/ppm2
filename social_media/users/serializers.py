@@ -1,5 +1,18 @@
 from rest_framework import serializers
 from .models import CustomUser
+from posts.models import Post
+from posts.serializers import CommentSerializer
+
+class PostWithCommentsSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(many=True, read_only=True)
+    likes_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'content', 'created_at', 'likes_count', 'comments']
+
+    def get_likes_count(self, obj):
+        return obj.likes.count()
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -9,11 +22,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
     followers = serializers.SlugRelatedField(many=True, slug_field='username', read_only=True)
     following = serializers.SlugRelatedField(many=True, slug_field='username', read_only=True)
 
+    # Visualizzazione dei propri post
+    posts = PostWithCommentsSerializer(many=True, read_only=True)
+
     # Meta definisce le proprietà del modello da serializzare
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'password', 'bio', 'followers', 'following']
-        read_only_fields = ['id', 'followers', 'following']
+        fields = ['id', 'username', 'email', 'password', 'bio', 'followers', 'following', 'posts']
+        read_only_fields = ['id', 'followers', 'following', 'posts']
 
     # metodo per validare i dati in ingresso
     def create(self, validated_data):
@@ -34,3 +50,5 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.bio = validated_data.get('bio', instance.bio)
         instance.save()
         return instance
+
+
