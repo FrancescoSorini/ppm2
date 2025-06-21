@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'users',
     'posts',
+    'corsheaders',
 ]
 
 # REST Framework settings
@@ -55,7 +56,13 @@ REST_FRAMEWORK = {
 # to use custom user model
 AUTH_USER_MODEL = 'users.CustomUser'
 
+# CORS settings (per sviluppo locale)
+CORS_ALLOW_ALL_ORIGINS = True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
