@@ -13,7 +13,7 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
             return True
 
         # Permesso solo se l'utente è l'autore dell'oggetto
-        return obj.author == request.user
+        return obj.author == request.user or request.user.is_staff
 
 
 class IsAdminUser(permissions.BasePermission):

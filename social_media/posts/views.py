@@ -8,10 +8,6 @@ from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsAuthorOrReadOnly
 
 
-#TODO: Funzione per cancellare i post e i commenti
-#TODO: Creando un commento richiede l'id del post, non deve!
-
-
 class PostListCreateView(generics.ListCreateAPIView):
     """
     Elenca tutti i post o consente la creazione di un nuovo post.
@@ -85,3 +81,20 @@ def list_comments(request, slug):
     comments = post.comments.all().order_by('-created_at')
     serializer = CommentSerializer(comments, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# Eliminare un commento specifico
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def delete_comment(request, comment_id):
+    """
+    Elimina un commento se l'utente è autore o admin.
+    """
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.user != comment.author and not request.user.is_staff:
+        return Response({'error': 'Non hai i permessi per eliminare questo commento.'},
+                        status=status.HTTP_403_FORBIDDEN)
+
+    comment.delete()
+    return Response({'message': 'Commento eliminato con successo.'}, status=status.HTTP_204_NO_CONTENT)

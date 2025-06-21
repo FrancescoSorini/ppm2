@@ -4,24 +4,29 @@ from .views import (
     PostDetailView,
     toggle_like_post,
     create_comment,
-    list_comments
+    list_comments,
+    delete_comment
 )
 
 urlpatterns = [
     #  Lista e creazione post
-    path('posts/', PostListCreateView.as_view(), name='posts-list-create'),
+    path('posts', PostListCreateView.as_view(), name='posts-list-create'),
 
     #  Dettaglio, modifica ed eliminazione post tramite slug
-    path('posts/<slug:slug>/', PostDetailView.as_view(), name='post-detail'),
+    path('<slug:slug>', PostDetailView.as_view(), name='post-detail'),
 
     #  Like/unlike tramite slug
-    path('posts/<slug:slug>/like/', toggle_like_post, name='post-toggle-like'),
+    path('<slug:slug>/like', toggle_like_post, name='post-toggle-like'),
 
     #  Lista commenti tramite slug
-    path('posts/<slug:slug>/comments/', list_comments, name='post-comments-list'),
+    path('<slug:slug>/comments', list_comments, name='post-comments-list'),
 
     #  Creazione commento tramite slug
-    path('posts/<slug:slug>/comments/add/', create_comment, name='post-add-comment'),
+    path('<slug:slug>/comments/add', create_comment, name='post-add-comment'),
+
+    #  Eliminazione commento tramite ID
+    path('comments/<int:comment_id>/delete', delete_comment, name='comment-delete'),
+
 ]
 
 
