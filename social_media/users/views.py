@@ -43,6 +43,13 @@ class CurrentUserAPIView(APIView):
         serializer = CustomUserSerializer(request.user)
         return Response(serializer.data)
 
+    def patch(self, request):
+        serializer = CustomUserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # vista api per effettuare il login e restituire il token
 @api_view(['GET', 'POST'])
