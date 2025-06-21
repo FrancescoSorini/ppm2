@@ -48,6 +48,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
         instance.username = validated_data.get('username', instance.username)
         instance.bio = validated_data.get('bio', instance.bio)
+        instance.email = validated_data.get('email', instance.email)
         instance.save()
         return instance
 
