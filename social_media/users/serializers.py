@@ -28,7 +28,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     # Meta definisce le proprietà del modello da serializzare
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'password', 'bio', 'followers', 'following', 'posts']
+        fields = ['id', 'username', 'email', 'password', 'bio', 'is_staff', 'followers', 'following', 'posts']
         read_only_fields = ['id', 'followers', 'following', 'posts']
 
     # metodo per validare i dati in ingresso
