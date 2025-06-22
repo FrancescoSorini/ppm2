@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Profilo utente</title>
+  <style>
+    body { font-family: Arial; margin: 2rem; }
+    header { display: flex; justify-content: space-between; align-items: center; }
+    .post { border: 1px solid #ccc; padding: 1rem; margin-bottom: 2rem; }
+    .comment { margin-left: 1rem; font-style: italic; }
+    textarea, input { width: 100%; margin-top: 0.5rem; padding: 0.5rem; }
+    button { margin-top: 0.5rem; }
+    .edit-section { margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>👤 Profilo di <span id="profile-username"></span></h2>
+
+
+  <div id="profile-stats" style="margin: 1rem 0;">
+    <!--<p><strong>Follower:</strong> <span id="profile-follower-count">0</span> |
+       <strong>Seguiti:</strong> <span id="profile-following-count">0</span></p>-->
+  <p>
+    <strong><a href="#" id="follower-link">Follower:</a></strong>
+    <span id="profile-follower-count">0</span> |
+    <strong><a href="#" id="following-link">Seguiti:</a></strong>
+    <span id="profile-following-count">0</span>
+    </p>
+    <div id="follow-list" style="margin-top: 1rem;"></div>
+    <p><strong>Email:</strong> <span id="profile-email"></span></p>
+    <p><strong>Bio:</strong> <span id="profile-bio"></span></p>
+  </div>
+
+  <div id="follow-actions" style="margin: 1rem 0;"></div>
+  <button onclick="goHome()">🏠 Torna alla Home</button>
+  <button onclick="logout()"> Logout </button>
+</header>
+
+
+
+  <!-- Area modifica profilo visibile solo se owner/admin -->
+  <div class="edit-section" id="edit-profile-section" style="display: none;">
+    <h3>✏️ Modifica il profilo</h3>
+    <input type="text" id="edit-username" placeholder="Nuovo username">
+    <input type="email" id="edit-email" placeholder="Nuova email">
+    <input type="text" id="edit-bio" placeholder="Nuova bio">
+    <button onclick="updateProfile()">Salva modifiche</button>
+    <button onclick="deleteProfile()">Elimina account</button>
+  </div>
+
+  <hr>
+
+  <section id="create-post-section" style="display: none;">
+    <h3>➕ Crea un nuovo post</h3>
+    <input type="text" id="new-post-title" placeholder="Titolo" maxlength="100">
+    <textarea id="new-post-content" placeholder="Contenuto del post"></textarea>
+    <button onclick="createPost()">Pubblica</button>
+  </section>
+
+  <hr>
+
+
+  <h3>📌 Post pubblicati</h3>
+  <div id="posts-container">Caricamento post...</div>
+
+  <script src="profile.js"></script>
+</body>
+</html>

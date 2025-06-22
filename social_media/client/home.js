@@ -1,0 +1,186 @@
+const API_POSTS = "http://127.0.0.1:8000/api-posts";
+const API_USERS = "http://127.0.0.1:8000/api-users";
+const postContainer = document.getElementById("post-container");
+
+
+
+
+// Recupera il token dal cookie
+function getToken() {
+  const match = document.cookie.match(/(^| )token=([^;]+)/);
+  return match ? match[2] : null;
+}
+
+const token = getToken();
+if (!token) {
+  window.location.href = "index.html"; // Blocca accesso se non loggato
+}
+
+// Funzione logout
+function logout(message = null) {
+  document.cookie = "token=; Max-Age=0; path=/"; // cancella il cookie token
+  if (message) alert(message);
+  window.location.href = "index.html";
+}
+
+// Mostra nome utente loggato
+async function loadCurrentUser() {
+  const res = await fetch(`${API_USERS}/me`, {
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  if (res.status === 401) return logout("Sessione scaduta. Effettua il login.");
+  const user = await res.json();
+  document.getElementById("username-display").textContent = `@${user.username}`;
+}
+
+// Carica tutti i post
+async function fetchPosts() {
+  const res = await fetch(`${API_POSTS}/posts`, {
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  if (res.status === 401) return logout("Sessione scaduta.");
+  const posts = await res.json();
+  postContainer.innerHTML = "";
+
+  posts.forEach(post => {
+    const div = document.createElement("div");
+    div.classList.add("post");
+
+    div.innerHTML = `
+      <h3>
+        <a href="profile.html?user=${encodeURIComponent(post.author)}">@${post.author}</a> - ${post.title}
+      </h3>
+      <p>&lt;${post.slug}&gt;</p>
+      <p>${post.content}</p>
+      <small>Creato il: ${new Date(post.created_at).toLocaleString()}</small>
+      <p>❤️ ${post.likes_count} like</p>
+
+      <button onclick="likePost('${post.slug}')">Mi piace</button>
+
+      <h4>Commenti:</h4>
+      ${post.comments.map(c => `
+        <div class="comment">
+        <strong>
+         <a href="profile.html?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
+        </strong> ${c.content}
+        </div>
+      `).join('')}
+
+      <textarea id="comment-${post.slug}" placeholder="Scrivi un commento..."></textarea>
+      <button onclick="addComment('${post.slug}')">Invia commento</button>
+    `;
+
+    postContainer.appendChild(div);
+  });
+}
+
+// Crea un nuovo post
+async function createPost() {
+  const title = document.getElementById("new-post-title").value.trim();
+  const content = document.getElementById("new-post-content").value.trim();
+
+  if (!title || !content) {
+    alert("Inserisci sia titolo che contenuto.");
+    return;
+  }
+
+  const res = await fetch(`${API_POSTS}/posts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`
+    },
+    body: JSON.stringify({ title, content })
+  });
+
+  if (res.status === 401) return logout();
+  if (res.ok) {
+    alert("Post pubblicato!");
+    document.getElementById("new-post-title").value = "";
+    document.getElementById("new-post-content").value = "";
+    fetchPosts(); // ricarica i post
+  } else {
+    const error = await res.json();
+    alert("Errore nella creazione del post:\n" + JSON.stringify(error));
+  }
+}
+
+
+// Invio Like
+async function likePost(slug) {
+  const res = await fetch(`${API_POSTS}/${slug}/like`, {
+    method: "POST",
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  if (res.status === 401) return logout();
+  fetchPosts();
+}
+
+// Invio Commento
+async function addComment(slug) {
+  const textarea = document.getElementById(`comment-${slug}`);
+  const content = textarea.value;
+  if (!content.trim()) return;
+
+  const res = await fetch(`${API_POSTS}/${slug}/comments/add`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`
+    },
+    body: JSON.stringify({ content })
+  });
+
+  if (res.status === 401) return logout();
+  textarea.value = "";
+  fetchPosts();
+}
+
+// Cerca utenti
+async function search() {
+  const query = document.getElementById("search-input").value.trim();
+  if (!query) return;
+
+  const res = await fetch(`${API_USERS}/search/?q=${query}`, {
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  if (res.status === 401) return logout();
+
+  const users = await res.json();
+
+  if (users.length > 0) {
+    const target = users[0];
+    const confirmVisit = confirm(`Utente trovato: @${target.username}\nVuoi visitare il suo profilo?`);
+    if (confirmVisit) {
+      window.location.href = `profile.html?user=${encodeURIComponent(target.username)}`;
+    }
+  } else {
+    alert("Nessun utente trovato con quel nome.");
+  }
+}
+
+// Profilo personale
+async function goToProfile() {
+  const res = await fetch("http://127.0.0.1:8000/api-users/me", {
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  if (res.status === 401) {
+    logout("Sessione scaduta.");
+    return;
+  }
+
+  const user = await res.json();
+  const username = encodeURIComponent(user.username);
+  window.location.href = `profile.html?user=${username}`;
+}
+
+// All'avvio
+(async () => {
+  await loadCurrentUser();
+  await fetchPosts();
+})();

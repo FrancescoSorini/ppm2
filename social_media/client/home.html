@@ -1,10 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <title>Homepage</title>
+  <meta charset="UTF-8">
+  <title>Home - Social App</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    header { display: flex; justify-content: space-between; margin-bottom: 2rem; }
+    .post { border: 1px solid #ccc; padding: 1rem; margin-bottom: 2rem; }
+    .comment { margin-left: 1rem; font-style: italic; }
+    input, textarea { display: block; margin: 0.5rem 0; width: 100%; padding: 0.5rem; }
+    button { padding: 0.3rem 1rem; margin-top: 0.3rem; }
+    .search-box { margin-bottom: 2rem; }
+
+    #create-post-section {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      background-color: #fdfdfd;
+    }
+
+    #create-post-section input,
+    #create-post-section textarea {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+
+
 </head>
 <body>
 
+  <header>
+    <h2>🌐 Social App</h2>
+    <div>
+      <span id="username-display"></span>
+      <button onclick="goToProfile()">Il mio profilo</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="search-box">
+    <input type="text" id="search-input" placeholder="Cerca utenti...">
+    <button onclick="search()">Cerca</button>
+  </div>
+
+  <section id="create-post-section">
+    <h3>Crea un nuovo post</h3>
+    <input type="text" id="new-post-title" placeholder="Titolo" maxlength="40" required>
+    <textarea id="new-post-content" placeholder="Contenuto del post" required></textarea>
+    <button onclick="createPost()">Pubblica</button>
+  </section>
+
+
+  <div id="post-container">
+    <p>Caricamento post...</p>
+  </div>
+
+  <script src="home.js"></script>
 </body>
 </html>

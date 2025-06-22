@@ -12,7 +12,7 @@ class PostListCreateView(generics.ListCreateAPIView):
     """
     Elenca tutti i post o consente la creazione di un nuovo post.
     """
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
