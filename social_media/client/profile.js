@@ -243,7 +243,11 @@ async function fetchAndDisplayPosts() {
             <a href="profile.html?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
           </strong> ${c.content}
           ${(c.author === currentUser.username || currentUser.is_staff) ? `
-            <button onclick="deleteComment(${c.id})" title="Elimina commento">❌</button>
+            <button 
+                onclick="deleteComment(${c.id})" 
+                title="Elimina commento"
+                style="font-size: 0.8rem; padding: 2px 6px; margin-left: 5px;"
+            >❌</button>
           ` : ""}
         </div>
       `).join('')}
