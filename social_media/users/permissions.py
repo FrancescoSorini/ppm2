@@ -30,3 +30,15 @@ class IsSelfOrAdmin(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return request.user == obj or request.user.is_staff
+
+
+class IsPublicOrAdmin(permissions.BasePermission):
+    """
+    Permette a tutti gli utenti autenticati di visualizzare altri profili,
+    ma solo l'utente stesso o l'admin può modificarli.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True  # GET, HEAD, OPTIONS → consentiti a tutti gli utenti autenticati
+        return request.user == obj or request.user.is_staff

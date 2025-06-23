@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 
-from .permissions import IsSelfOrAdmin
+from .permissions import IsSelfOrAdmin, IsPublicOrAdmin
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
@@ -32,7 +32,7 @@ class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = [permissions.IsAuthenticated, IsSelfOrAdmin]
+    permission_classes = [permissions.IsAuthenticated, IsPublicOrAdmin]
 
 
 

@@ -135,7 +135,7 @@ async function toggleFollow(username, isFollowing) {
   }
 }
 
-// Lista follower e following
+// Lista follower e following 1
 function showFollowList(listType) {
   const users = listType === 'followers' ? profileUser.followers : profileUser.following;
   const title = listType === 'followers' ? 'Follower di' : 'Seguiti da';

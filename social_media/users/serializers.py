@@ -19,8 +19,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
 
     # visualizzazione dei campi followers e following tramite ID
+
     followers = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     following = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
 
     # Visualizzazione dei propri post
     posts = PostWithCommentsSerializer(many=True, read_only=True)
@@ -51,5 +53,3 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.save()
         return instance
-
-
