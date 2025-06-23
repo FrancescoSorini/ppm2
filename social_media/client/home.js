@@ -15,6 +15,7 @@ const token = getToken();
 if (!token) {
   window.location.href = "index.html"; // Blocca accesso se non loggato
 }
+let currentUser = null;
 
 // Funzione logout
 function logout(message = null) {
@@ -30,9 +31,11 @@ async function loadCurrentUser() {
   });
 
   if (res.status === 401) return logout("Sessione scaduta. Effettua il login.");
-  const user = await res.json();
-  document.getElementById("username-display").textContent = `@${user.username}`;
+
+  currentUser = await res.json(); // 👈 salvalo come variabile globale
+  document.getElementById("username-display").textContent = `@${currentUser.username}`;
 }
+
 
 // Carica tutti i post
 async function fetchPosts() {
@@ -62,11 +65,15 @@ async function fetchPosts() {
       <h4>Commenti:</h4>
       ${post.comments.map(c => `
         <div class="comment">
-        <strong>
-         <a href="profile.html?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
-        </strong> ${c.content}
+          <strong>
+            <a href="profile.html?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
+          </strong> ${c.content}
+          ${(c.author === currentUser.username || currentUser.is_staff) ? `
+            <button onclick="deleteComment(${c.id})" title="Elimina commento">❌</button>
+          ` : ""}
         </div>
       `).join('')}
+
 
       <textarea id="comment-${post.slug}" placeholder="Scrivi un commento..."></textarea>
       <button onclick="addComment('${post.slug}')">Invia commento</button>
@@ -178,6 +185,24 @@ async function goToProfile() {
   const username = encodeURIComponent(user.username);
   window.location.href = `profile.html?user=${username}`;
 }
+
+// Elimina commento
+async function deleteComment(commentId) {
+  const confirmDelete = confirm("Vuoi eliminare questo commento?");
+  if (!confirmDelete) return;
+
+  const res = await fetch(`${API_POSTS}/comments/${commentId}/delete`, {
+    method: "DELETE",
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  if (res.ok) {
+    fetchPosts(); // aggiorna la lista dei post/commenti
+  } else {
+    alert("Errore durante l'eliminazione del commento.");
+  }
+}
+
 
 // All'avvio
 (async () => {

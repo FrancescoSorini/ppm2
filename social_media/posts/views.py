@@ -8,6 +8,9 @@ from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsAuthorOrReadOnly
 
 
+# TODO: Rivedere la ricerca dei commenti, usare ID al posto di slug
+
+
 class PostListCreateView(generics.ListCreateAPIView):
     """
     Elenca tutti i post o consente la creazione di un nuovo post.

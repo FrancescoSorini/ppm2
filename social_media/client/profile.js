@@ -4,6 +4,9 @@ const token = getToken();
 
 if (!token) window.location.href = "index.html";
 
+
+
+
 // Leggi token dal cookie
 function getToken() {
   const match = document.cookie.match(/(^| )token=([^;]+)/);
@@ -237,10 +240,14 @@ async function fetchAndDisplayPosts() {
       ${post.comments.map(c => `
         <div class="comment">
           <strong>
-            <a href="profile.html?user=${encodeURIComponent(c.author)}">@${c.author}</a>
-          </strong>: ${c.content}
+            <a href="profile.html?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
+          </strong> ${c.content}
+          ${(c.author === currentUser.username || currentUser.is_staff) ? `
+            <button onclick="deleteComment(${c.id})" title="Elimina commento">❌</button>
+          ` : ""}
         </div>
       `).join('')}
+
 
 
       <textarea id="comment-${post.slug}" placeholder="Scrivi un commento..."></textarea>
@@ -323,6 +330,24 @@ async function createPost() {
     alert("Errore nella pubblicazione del post.");
   }
 }
+
+// Elimina commento
+async function deleteComment(commentId) {
+  const confirmDelete = confirm("Vuoi eliminare questo commento?");
+  if (!confirmDelete) return;
+
+  const res = await fetch(`${API_POSTS}/comments/${commentId}/delete`, {
+    method: "DELETE",
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  if (res.ok) {
+    fetchAndDisplayPosts(); // ricarica post e commenti aggiornati
+  } else {
+    alert("Errore durante l'eliminazione del commento.");
+  }
+}
+
 
 
 // Logout
