@@ -34,8 +34,8 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     # Override per ottenere post specifico tramite user-friendly slug
     def get_object(self):
-        slug = self.kwargs.get('slug')
-        post = get_object_or_404(Post, slug=slug)
+        post_id = self.kwargs.get('pk')
+        post = get_object_or_404(Post, pk=post_id)
         self.check_object_permissions(self.request, post)
         return post
 
@@ -43,11 +43,11 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
 # Mettere e togliere like ai post
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def toggle_like_post(request, slug):
+def toggle_like_post(request, post_id):
     """
     Aggiunge o rimuove un like a un post.
     """
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post, pk=post_id)
     if request.user in post.likes.all():
         post.likes.remove(request.user)
         return Response({'message': 'Hai tolto il mi piace.'}, status=status.HTTP_200_OK)
@@ -59,11 +59,11 @@ def toggle_like_post(request, slug):
 # Commentare un post specifico
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def create_comment(request, slug):
+def create_comment(request, post_id):
     """
     Crea un commento su un post specifico.
     """
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post, pk=post_id)
     serializer = CommentSerializer(data=request.data)
 
     if serializer.is_valid():
@@ -76,11 +76,11 @@ def create_comment(request, slug):
 # Elencare i commenti di un post specifico
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticatedOrReadOnly])
-def list_comments(request, slug):
+def list_comments(request, post_id):
     """
     Elenca tutti i commenti di un post specifico.
     """
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post, pk=post_id)
     comments = post.comments.all().order_by('-created_at')
     serializer = CommentSerializer(comments, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

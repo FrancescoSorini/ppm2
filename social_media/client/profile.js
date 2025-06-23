@@ -229,12 +229,11 @@ async function fetchAndDisplayPosts() {
 
     div.innerHTML = `
       <h4>${post.title}</h4>
-      <p>&lt;${post.slug}&gt;</p>
       <p>${post.content}</p>
       <small>Creato il: ${new Date(post.created_at).toLocaleString()}</small>
       <p>❤️ ${post.likes_count} like</p>
 
-      <button onclick="likePost('${post.slug}')">Mi piace</button>
+      <button onclick="likePost('${post.id}')">Mi piace</button>
 
       <h5>Commenti:</h5>
       ${post.comments.map(c => `
@@ -254,10 +253,10 @@ async function fetchAndDisplayPosts() {
 
 
 
-      <textarea id="comment-${post.slug}" placeholder="Scrivi un commento..."></textarea>
-      <button onclick="addComment('${post.slug}')">Invia commento</button>
+      <textarea id="comment-${post.id}" placeholder="Scrivi un commento..."></textarea>
+      <button onclick="addComment('${post.id}')">Invia commento</button>
       ${(currentUser.id === profileUser.id || currentUser.is_staff) ? `
-        <button onclick="deletePost('${post.slug}')">Elimina post</button>
+        <button onclick="deletePost('${post.id}')">Elimina post</button>
       ` : ""}
     `;
 

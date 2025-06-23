@@ -55,12 +55,11 @@ async function fetchPosts() {
       <h3>
         <a href="profile.html?user=${encodeURIComponent(post.author)}">@${post.author}</a> - ${post.title}
       </h3>
-      <p>&lt;${post.slug}&gt;</p>
       <p>${post.content}</p>
       <small>Creato il: ${new Date(post.created_at).toLocaleString()}</small>
       <p>❤️ ${post.likes_count} like</p>
 
-      <button onclick="likePost('${post.slug}')">Mi piace</button>
+      <button onclick="likePost('${post.id}')">Mi piace</button>
 
       <h4>Commenti:</h4>
       ${post.comments.map(c => `
@@ -79,8 +78,8 @@ async function fetchPosts() {
       `).join('')}
 
 
-      <textarea id="comment-${post.slug}" placeholder="Scrivi un commento..."></textarea>
-      <button onclick="addComment('${post.slug}')">Invia commento</button>
+      <textarea id="comment-${post.id}" placeholder="Scrivi un commento..."></textarea>
+      <button onclick="addComment('${post.id}')">Invia commento</button>
     `;
 
     postContainer.appendChild(div);
