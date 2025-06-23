@@ -1,18 +1,20 @@
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 const messageBox = document.getElementById('message');
-
 const API_USERS = 'http://127.0.0.1:8000/api-users';
+
 
 // Salva il token in un cookie
 function setTokenCookie(token) {
   document.cookie = `token=${token}; path=/;`;
 }
 
+
 // Cancella eventuale cookie esistente
 function clearTokenCookie() {
   document.cookie = "token=; Max-Age=0; path=/;";
 }
+
 
 // LOGIN
 loginForm.addEventListener('submit', async (e) => {
@@ -36,6 +38,7 @@ loginForm.addEventListener('submit', async (e) => {
     messageBox.textContent = data.error || 'Credenziali non valide.';
   }
 });
+
 
 // REGISTRAZIONE + LOGIN AUTOMATICO
 registerForm.addEventListener('submit', async (e) => {

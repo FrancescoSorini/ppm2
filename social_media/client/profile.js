@@ -2,9 +2,9 @@ const API_USERS = "http://127.0.0.1:8000/api-users";
 const API_POSTS = "http://127.0.0.1:8000/api-posts";
 const token = getToken();
 
+
+// Se non c'è token, reindirizza al login
 if (!token) window.location.href = "index.html";
-
-
 
 
 // Leggi token dal cookie
@@ -13,9 +13,12 @@ function getToken() {
   return match ? match[2] : null;
 }
 
+
+// Torna alla home
 function goHome() {
   window.location.href = "home.html";
 }
+
 
 // Ottieni username da query string (?user=...)
 function getProfileUsername() {
@@ -23,17 +26,20 @@ function getProfileUsername() {
   return params.get("user");
 }
 
+
 // Dati globali
 let currentUser = null;
 let profileUser = null;
 
-// Inizializza
+
+// Inizializza profilo
 (async () => {
   await fetchCurrentUser();
   await fetchProfileUser();
   displayProfileInfo();
   await fetchAndDisplayPosts();
 })();
+
 
 // Aggiungi listener ai link follower e following
 document.getElementById("follower-link").addEventListener("click", (e) => {
@@ -46,6 +52,7 @@ document.getElementById("following-link").addEventListener("click", (e) => {
   showFollowList("following");
 });
 
+
 // Info utente loggato
 async function fetchCurrentUser() {
   const res = await fetch(`${API_USERS}/me`, {
@@ -55,6 +62,7 @@ async function fetchCurrentUser() {
   if (res.status === 401) return logout("Sessione scaduta");
   currentUser = await res.json();
 }
+
 
 // Info utente del profilo
 async function fetchProfileUser() {
@@ -77,9 +85,9 @@ async function fetchProfileUser() {
   profileUser = results[0];
 }
 
+
 //  Mostra info pubbliche + se owner => mostra sezione modifica
 function displayProfileInfo() {
-
   document.getElementById("profile-username").textContent = profileUser.username;
   document.getElementById("profile-email").textContent = profileUser.email || "N/A";
   document.getElementById("profile-bio").textContent = profileUser.bio || "Nessuna bio";
@@ -105,7 +113,7 @@ function displayProfileInfo() {
 
   // Bottone Segui/Smetti di seguire
   const followBox = document.getElementById("follow-actions");
-  followBox.innerHTML = ""; // pulisci
+  followBox.innerHTML = ""; // pulisci contenuto precedente
 
   if (currentUser.id !== profileUser.id) {
     const isFollowing = Array.isArray(currentUser.following) &&
@@ -117,6 +125,7 @@ function displayProfileInfo() {
     followBox.appendChild(btn);
   }
 }
+
 
 // Gestione follow/unfollow
 async function toggleFollow(username, isFollowing) {
@@ -134,6 +143,7 @@ async function toggleFollow(username, isFollowing) {
     alert("Errore nell'operazione di follow/unfollow.");
   }
 }
+
 
 // Lista follower e following 1
 function showFollowList(listType) {
@@ -188,6 +198,7 @@ async function updateProfile() {
   }
 }
 
+
 // Elimina account
 async function deleteProfile() {
   const confirmDelete = confirm("Sei sicuro di voler eliminare l'account?");
@@ -206,6 +217,7 @@ async function deleteProfile() {
     alert("Errore durante l'eliminazione.");
   }
 }
+
 
 // Mostra tutti i post dell'utente
 async function fetchAndDisplayPosts() {
@@ -251,18 +263,16 @@ async function fetchAndDisplayPosts() {
         </div>
       `).join('')}
 
-
-
       <textarea id="comment-${post.id}" placeholder="Scrivi un commento..."></textarea>
       <button onclick="addComment('${post.id}')">Invia commento</button>
       ${(currentUser.id === profileUser.id || currentUser.is_staff) ? `
         <button onclick="deletePost('${post.id}')">Elimina post</button>
       ` : ""}
     `;
-
     container.appendChild(div);
   });
 }
+
 
 // Metti like a un post
 async function likePost(slug) {
@@ -272,6 +282,7 @@ async function likePost(slug) {
   });
   fetchAndDisplayPosts();
 }
+
 
 // Aggiungi commento
 async function addComment(slug) {
@@ -292,6 +303,7 @@ async function addComment(slug) {
   fetchAndDisplayPosts();
 }
 
+
 // Elimina post
 async function deletePost(slug) {
   const confirmDel = confirm("Vuoi eliminare questo post?");
@@ -304,6 +316,7 @@ async function deletePost(slug) {
 
   fetchAndDisplayPosts();
 }
+
 
 // Crea post
 async function createPost() {
@@ -334,6 +347,7 @@ async function createPost() {
   }
 }
 
+
 // Elimina commento
 async function deleteComment(commentId) {
   const confirmDelete = confirm("Vuoi eliminare questo commento?");
@@ -350,7 +364,6 @@ async function deleteComment(commentId) {
     alert("Errore durante l'eliminazione del commento.");
   }
 }
-
 
 
 // Logout

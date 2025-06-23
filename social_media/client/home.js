@@ -11,11 +11,13 @@ function getToken() {
   return match ? match[2] : null;
 }
 
+// Controlla se l'utente è loggato
 const token = getToken();
 if (!token) {
-  window.location.href = "index.html"; // Blocca accesso se non loggato
+  window.location.href = "index.html"; // reindirizza alla pagina di login se non c'è token
 }
 let currentUser = null;
+
 
 // Funzione logout
 function logout(message = null) {
@@ -23,6 +25,7 @@ function logout(message = null) {
   if (message) alert(message);
   window.location.href = "index.html";
 }
+
 
 // Mostra nome utente loggato
 async function loadCurrentUser() {
@@ -47,6 +50,7 @@ async function fetchPosts() {
   const posts = await res.json();
   postContainer.innerHTML = "";
 
+  // Sezione html per i post
   posts.forEach(post => {
     const div = document.createElement("div");
     div.classList.add("post");
@@ -58,9 +62,9 @@ async function fetchPosts() {
       <p>${post.content}</p>
       <small>Creato il: ${new Date(post.created_at).toLocaleString()}</small>
       <p>❤️ ${post.likes_count} like</p>
-
+    
       <button onclick="likePost('${post.id}')">Mi piace</button>
-
+    
       <h4>Commenti:</h4>
       ${post.comments.map(c => `
         <div class="comment">
@@ -76,15 +80,22 @@ async function fetchPosts() {
           ` : ""}
         </div>
       `).join('')}
-
-
+    
       <textarea id="comment-${post.id}" placeholder="Scrivi un commento..."></textarea>
       <button onclick="addComment('${post.id}')">Invia commento</button>
+    
+      ${(currentUser.is_staff) ? `
+        <button onclick="deletePost(${post.id})"> 
+          Elimina post
+        </button>
+      ` : ""}
     `;
 
+    // Aggiunge il post al container
     postContainer.appendChild(div);
   });
 }
+
 
 // Crea un nuovo post
 async function createPost() {
@@ -96,6 +107,7 @@ async function createPost() {
     return;
   }
 
+  // Controlla se l'utente è loggato
   const res = await fetch(`${API_POSTS}/posts`, {
     method: "POST",
     headers: {
@@ -129,6 +141,7 @@ async function likePost(slug) {
   fetchPosts();
 }
 
+
 // Invio Commento
 async function addComment(slug) {
   const textarea = document.getElementById(`comment-${slug}`);
@@ -148,6 +161,7 @@ async function addComment(slug) {
   textarea.value = "";
   fetchPosts();
 }
+
 
 // Cerca utenti
 async function search() {
@@ -173,7 +187,8 @@ async function search() {
   }
 }
 
-// Profilo personale
+
+// Profilo personale utente loggato
 async function goToProfile() {
   const res = await fetch("http://127.0.0.1:8000/api-users/me", {
     headers: { Authorization: `Token ${token}` }
@@ -189,6 +204,7 @@ async function goToProfile() {
   window.location.href = `profile.html?user=${username}`;
 }
 
+
 // Elimina commento
 async function deleteComment(commentId) {
   const confirmDelete = confirm("Vuoi eliminare questo commento?");
@@ -200,7 +216,7 @@ async function deleteComment(commentId) {
   });
 
   if (res.ok) {
-    fetchPosts(); // aggiorna la lista dei post/commenti
+    fetchPosts(); // aggiorna la lista dei post
   } else {
     alert("Errore durante l'eliminazione del commento.");
   }
