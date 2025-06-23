@@ -4,15 +4,38 @@
   <meta charset="UTF-8">
   <title>Login / Registrazione</title>
   <style>
-    body { font-family: Arial; margin: 2rem; }
-    form { margin-bottom: 2rem; }
-    input { margin: 0.5rem 0; display: block; padding: 0.5rem; width: 250px; }
-    button { padding: 0.5rem 1rem; }
-    .message { margin-top: 1rem; color: red; }
+    body {
+      font-family: Arial;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #container {
+      text-align: center;
+    }
+    form {
+      margin-bottom: 2rem;
+    }
+    input {
+      margin: 0.5rem 0;
+      display: block;
+      padding: 0.5rem;
+      width: 250px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+    }
+    .message {
+      margin-top: 1rem;
+      color: red;
+    }
   </style>
 </head>
 <body>
-
+  <div id="container">
+  <h1 style="font-size: 2rem; font-weight: bold;">🌐 Social App</h1>
   <h1>Accedi</h1>
   <form id="login-form">
     <input type="text" id="login-username" placeholder="Username" required />
@@ -20,17 +43,17 @@
     <button type="submit">Login</button>
   </form>
 
-<h2>Oppure registrati</h2>
-<form id="register-form">
-  <input type="text" id="reg-username" placeholder="Username" required />
-  <input type="password" id="reg-password" placeholder="Password" required />
-  <input type="email" id="reg-email" placeholder="Email (facoltativa)" />
-  <input type="text" id="reg-bio" placeholder="Bio (facoltativa)" />
-  <button type="submit">Registrati</button>
-</form>
+  <h2>Oppure registrati</h2>
+  <form id="register-form">
+    <input type="text" id="reg-username" placeholder="Username" required />
+    <input type="password" id="reg-password" placeholder="Password" required />
+    <input type="email" id="reg-email" placeholder="Email (facoltativa)" />
+    <input type="text" id="reg-bio" placeholder="Bio (facoltativa)" />
+    <button type="submit">Registrati</button>
+  </form>
 
   <div class="message" id="message"></div>
-
+</div>
   <script src="auth.js"></script>
 </body>
 </html>
