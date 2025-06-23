@@ -6,7 +6,7 @@
   <title>Profilo utente</title>
 
   <style>
-    body { font-family: Arial; margin: 2rem; }
+    body { font-family: Arial, serif; margin: 2rem; }
     header { display: flex; justify-content: space-between; align-items: center; }
     .post { border: 1px solid #ccc; padding: 1rem; margin-bottom: 2rem; }
     .comment { margin-left: 1rem; font-style: italic; }
@@ -32,6 +32,10 @@
   </div>
 
   <div id="follow-actions" style="margin: 1rem 0;"></div>
+  <!-- Pulsante per admin, visibile solo se è loggato un admin -->
+  <div id="admin-panel-button" style=" display: none;">
+    <button onclick="goToAdminPanel()">Pannello Admin</button>
+  </div>
   <button onclick="goHome()">🏠 Torna alla Home</button>
   <button onclick="logout()"> Logout </button>
 </header>

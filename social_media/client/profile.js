@@ -20,6 +20,12 @@ function goHome() {
 }
 
 
+// Accesso al pannello admin di Django
+function goToAdminPanel() {
+  window.open("http://127.0.0.1:8000/admin", "_blank");
+}
+
+
 // Ottieni username da query string (?user=...)
 function getProfileUsername() {
   const params = new URLSearchParams(window.location.search);
@@ -93,6 +99,11 @@ function displayProfileInfo() {
   document.getElementById("profile-bio").textContent = profileUser.bio || "Nessuna bio";
   document.getElementById("profile-follower-count").textContent = profileUser.followers?.length || 0;
   document.getElementById("profile-following-count").textContent = profileUser.following?.length || 0;
+
+  // Se l'utente è admin e sta guardando il proprio profilo mostra bottone pannello admin
+  if (currentUser.is_staff && currentUser.id === profileUser.id) {
+    document.getElementById("admin-panel-button").style.display = "block";
+  }
 
   // Se owner o admin, mostra sezione modifica
   const editSection = document.getElementById("edit-profile-section");
