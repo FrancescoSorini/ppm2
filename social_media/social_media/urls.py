@@ -27,4 +27,7 @@ urlpatterns = [
     # Include gli URLs dall'app posts
     path('api-posts/', include('posts.urls')),
 
+    # Include gli URLs dall'app notifications
+    path('api-notifications/', include('notifications.urls')),
+
 ]
