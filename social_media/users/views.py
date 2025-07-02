@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from .permissions import IsSelfOrAdmin, IsPublicOrAdmin
 from .models import CustomUser
 from .serializers import CustomUserSerializer
+from notifications.models import Notification
 
 
 class ListCreateUserAPIView(generics.ListCreateAPIView):
@@ -87,6 +88,14 @@ def follow_user(request, username):
     if target_user in request.user.following.all():
         return Response({"detail": f"Stai già seguendo {target_user.username}."}, status=409)
     request.user.following.add(target_user)
+
+    # Crea una notifica per l'utente seguito
+    Notification.objects.create(
+        sender=request.user,
+        recipient=target_user,
+        notification_type='follow',
+        message=f"@{request.user.username} ha iniziato a seguirti."
+    )
     return Response({"detail": f"Ora segui {target_user.username}."})
 
 

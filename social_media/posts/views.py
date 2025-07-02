@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsAuthorOrReadOnly
+from notifications.models import Notification
+from notifications.utils import notify_mentions
 
 
 # TODO: Rivedere la ricerca dei commenti, usare ID al posto di slug
@@ -20,7 +22,9 @@ class PostListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        post = serializer.save(author=self.request.user)
+
+        notify_mentions(post.content, self.request.user, post_id=post.id)
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -53,6 +57,18 @@ def toggle_like_post(request, post_id):
         return Response({'message': 'Hai tolto il mi piace.'}, status=status.HTTP_200_OK)
     else:
         post.likes.add(request.user)
+
+        # Notifica l'autore del post che qualcuno ha messo mi piace
+        if request.user not in post.likes.all():
+            post.likes.add(request.user)
+            if request.user != post.author:
+                Notification.objects.create(
+                    sender=request.user,
+                    recipient=post.author,
+                    notification_type='like',
+                    post_id=post.id,
+                    message=f"@{request.user.username} ha messo mi piace al tuo post: {post.title}"
+                )
         return Response({'message': 'Hai messo mi piace!'}, status=status.HTTP_200_OK)
 
 
@@ -68,6 +84,20 @@ def create_comment(request, post_id):
 
     if serializer.is_valid():
         serializer.save(author=request.user, post=post)
+
+        # Notifica l'autore del post che qualcuno ha commentato
+        if request.user != post.author:
+            Notification.objects.create(
+                sender=request.user,
+                recipient=post.author,
+                notification_type='comment',
+                post_id=post.id,
+                message=f"@{request.user.username} ha commentato il tuo post: {post.title}"
+            )
+
+        # Notifica per menzioni nei commenti
+        notify_mentions(request.data.get("content", ""), request.user, post_id=post.id)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
