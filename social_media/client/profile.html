@@ -13,6 +13,34 @@
     textarea, input { width: 100%; margin-top: 0.5rem; padding: 0.5rem; }
     button { margin-top: 0.5rem; }
     .edit-section { margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1rem; }
+
+    #notification-wrapper{
+        position: relative;
+        display: inline-block;
+    }
+
+    #notification-badge{
+        display: none;
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 12px;
+    }
+
+    #notification-dropdown{
+        display: none;
+        position: absolute;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        width: 300px; max-height: 400px;
+        overflow-y: auto; z-index: 999;
+    }
   </style>
 
 </head>
@@ -35,6 +63,16 @@
   <!-- Pulsante per admin, visibile solo se è loggato un admin -->
   <div id="admin-panel-button" style=" display: none;">
     <button onclick="goToAdminPanel()">Pannello Admin</button>
+  </div>
+  <!-- Notifiche -->
+  <div id="notification-wrapper">
+      <button onclick="toggleNotifications()" style="position: relative;">
+        🔔
+        <span id="notification-badge"></span>
+      </button>
+      <div id="notification-dropdown">
+        <ul id="notification-list" style="list-style: none; padding: 0; margin: 0;"></ul>
+      </div>
   </div>
   <button onclick="goHome()">🏠 Torna alla Home</button>
   <button onclick="logout()"> Logout </button>

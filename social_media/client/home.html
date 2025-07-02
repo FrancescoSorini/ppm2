@@ -25,6 +25,36 @@
       width: 100%;
       margin-bottom: 0.5rem;
     }
+
+    #notification-wrapper{
+        position: relative;
+        display: inline-block;
+    }
+
+    #notification-badge{
+        display: none;
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 12px;
+    }
+
+    #notification-dropdown{
+        display: none;
+        position: absolute;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        width: 300px; max-height: 400px;
+        overflow-y: auto; z-index: 999;
+    }
+
+
   </style>
 
 
@@ -35,6 +65,16 @@
     <h2>🌐 Social App</h2>
     <div>
       <span id="username-display"></span>
+      <!-- Notifiche -->
+      <div id="notification-wrapper">
+        <button onclick="toggleNotifications()" style="position: relative;">
+            🔔
+            <span id="notification-badge"></span>
+        </button>
+        <div id="notification-dropdown">
+            <ul id="notification-list" style="list-style: none; padding: 0; margin: 0;"></ul>
+        </div>
+      </div>
       <button onclick="goToProfile()">Il mio profilo</button>
       <button onclick="logout()">Logout</button>
     </div>

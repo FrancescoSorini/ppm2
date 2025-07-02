@@ -222,9 +222,69 @@ async function deleteComment(commentId) {
   }
 }
 
+// Notifiche
+async function fetchNotifications() {
+  const res = await fetch("http://127.0.0.1:8000/api-notifications/", {
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  if (!res.ok) return;
+
+  const data = await res.json();
+  const unread = data.filter(n => !n.is_read);
+  const badge = document.getElementById("notification-badge");
+  const list = document.getElementById("notification-list");
+
+  // Badge
+  if (unread.length > 0) {
+    badge.textContent = unread.length;
+    badge.style.display = "inline";
+  } else {
+    badge.style.display = "none";
+  }
+
+  // Lista notifiche
+  list.innerHTML = "";
+
+  if (unread.length === 0) {
+    list.innerHTML = "<li style='padding: 0.5rem;'>Nessuna nuova notifica</li>";
+    return;
+  }
+
+  unread.forEach(n => {
+    const li = document.createElement("li");
+    li.style.padding = "0.5rem";
+    li.style.borderBottom = "1px solid #eee";
+    li.textContent = `[${new Date(n.created_at).toLocaleString()}] ${n.message}`;
+    list.appendChild(li);
+  });
+}
+
+async function toggleNotifications() {
+  const dropdown = document.getElementById("notification-dropdown");
+  const isVisible = dropdown.style.display === "block";
+  dropdown.style.display = isVisible ? "none" : "block";
+
+
+  if (!isVisible) {
+    await fetchNotifications();
+
+    // 🔁 Segna come lette sul backend
+    await fetch("http://127.0.0.1:8000/api-notifications/mark-as-read/", {
+      method: "POST",
+      headers: { Authorization: `Token ${token}` }
+    });
+
+    // 🔁 Nascondi il badge dopo la lettura
+    document.getElementById("notification-badge").style.display = "none";
+  }
+}
+
+
 
 // All'avvio
 (async () => {
   await loadCurrentUser();
   await fetchPosts();
+  fetchNotifications();
 })();
