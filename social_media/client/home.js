@@ -280,6 +280,19 @@ async function toggleNotifications() {
   }
 }
 
+// Elimina post
+async function deletePost(slug) {
+  const confirmDel = confirm("Vuoi eliminare questo post?");
+  if (!confirmDel) return;
+
+  await fetch(`${API_POSTS}/${slug}`, {
+    method: "DELETE",
+    headers: { Authorization: `Token ${token}` }
+  });
+
+  fetchAndDisplayPosts();
+}
+
 
 
 // All'avvio
