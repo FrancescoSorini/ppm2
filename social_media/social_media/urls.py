@@ -20,10 +20,8 @@ from django.views.generic import TemplateView
 
 
 urlpatterns = [
+    #API urls
     path('admin', admin.site.urls),
-
-    # Route per la root che serve index.html
-    path('', TemplateView.as_view(template_name='index.html'), name='login'),
 
     # Include gli URLs dall'app users
     path('api-users/', include('users.urls')),
@@ -33,5 +31,13 @@ urlpatterns = [
 
     # Include gli URLs dall'app notifications
     path('api-notifications/', include('notifications.urls')),
+
+    # DEPLOYMENT urls
+    path('', TemplateView.as_view(template_name='index.html'), name='login'),
+
+    path('home/', TemplateView.as_view(template_name='home.html'), name='home_page'),
+
+    path('profile/', TemplateView.as_view(template_name='profile.html'), name='profile_page'),
+
 
 ]
