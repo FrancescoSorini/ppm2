@@ -147,7 +147,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 STATICFILES_DIRS = [
     BASE_DIR / 'client',
-    BASE_DIR / 'social_media' / 'client',
 ]
 
 # Default primary key field type
