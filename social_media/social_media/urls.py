@@ -39,5 +39,4 @@ urlpatterns = [
 
     path('profile/', TemplateView.as_view(template_name='profile.html'), name='profile_page'),
 
-
 ]
