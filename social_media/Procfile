@@ -1,4 +1,6 @@
 web: gunicorn social_media.wsgi --log-file -
+web: PYTHONPATH=. gunicorn social_media.wsgi --log-file -
+
 
 
 
