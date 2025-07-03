@@ -1,5 +1,5 @@
-const API_USERS = "http://127.0.0.1:8000/api-users";
-const API_POSTS = "http://127.0.0.1:8000/api-posts";
+const API_USERS = "/api-users";
+const API_POSTS = "/api-posts";
 const token = getToken();
 
 
@@ -22,7 +22,7 @@ function goHome() {
 
 // Accesso al pannello admin di Django
 function goToAdminPanel() {
-  window.open("http://127.0.0.1:8000/admin", "_blank");
+  window.open("/admin", "_blank");
 }
 
 
@@ -36,10 +36,6 @@ function getProfileUsername() {
 // Dati globali
 let currentUser = null;
 let profileUser = null;
-
-
-
-
 
 
 // Aggiungi listener ai link follower e following
@@ -373,7 +369,7 @@ async function deleteComment(commentId) {
 
 // Notifiche
 async function fetchNotifications() {
-  const res = await fetch("http://127.0.0.1:8000/api-notifications/", {
+  const res = await fetch("/api-notifications/", {
     headers: { Authorization: `Token ${token}` }
   });
 
@@ -419,7 +415,7 @@ async function toggleNotifications() {
     await fetchNotifications();
 
     // 🔁 Segna come lette sul backend
-    await fetch("http://127.0.0.1:8000/api-notifications/mark-as-read/", {
+    await fetch("/api-notifications/mark-as-read/", {
       method: "POST",
       headers: { Authorization: `Token ${token}` }
     });

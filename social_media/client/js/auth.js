@@ -1,7 +1,9 @@
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 const messageBox = document.getElementById('message');
-const API_USERS = 'http://127.0.0.1:8000/api-users';
+const API_USERS = window.location.hostname === '127.0.0.1'
+  ? 'http://127.0.0.1:8000/api-users'
+  : 'https://web-production-aa257.up.railway.app/api-users';
 
 
 // Salva il token in un cookie
@@ -33,7 +35,7 @@ loginForm.addEventListener('submit', async (e) => {
   const data = await res.json();
   if (res.ok && data.token) {
     setTokenCookie(data.token);
-    window.location.href = 'home.html';
+    window.location.href = '/home/';
   } else {
     messageBox.textContent = data.error || 'Credenziali non valide.';
   }
@@ -73,7 +75,7 @@ registerForm.addEventListener('submit', async (e) => {
     const loginData = await loginRes.json();
     if (loginRes.ok && loginData.token) {
       setTokenCookie(loginData.token);
-      window.location.href = 'home.html';
+      window.location.href = '/home/';
     } else {
       messageBox.textContent = 'Registrazione riuscita, ma login fallito.';
     }

@@ -1,5 +1,9 @@
-const API_POSTS = "http://127.0.0.1:8000/api-posts";
-const API_USERS = "http://127.0.0.1:8000/api-users";
+const BASE_API = window.location.hostname === '127.0.0.1'
+  ? 'http://127.0.0.1:8000'
+  : 'https://web-production-aa257.up.railway.app';
+
+const API_POSTS = `${BASE_API}/api-posts`;
+const API_USERS = `${BASE_API}/api-users`;
 const postContainer = document.getElementById("post-container");
 
 
@@ -190,7 +194,7 @@ async function search() {
 
 // Profilo personale utente loggato
 async function goToProfile() {
-  const res = await fetch("http://127.0.0.1:8000/api-users/me", {
+  const res = await fetch("${API_USERS}/me", {
     headers: { Authorization: `Token ${token}` }
   });
 
@@ -224,7 +228,7 @@ async function deleteComment(commentId) {
 
 // Notifiche
 async function fetchNotifications() {
-  const res = await fetch("http://127.0.0.1:8000/api-notifications/", {
+  const res = await fetch("`${BASE_API}/api-notifications/", {
     headers: { Authorization: `Token ${token}` }
   });
 
@@ -270,7 +274,7 @@ async function toggleNotifications() {
     await fetchNotifications();
 
     // 🔁 Segna come lette sul backend
-    await fetch("http://127.0.0.1:8000/api-notifications/mark-as-read/", {
+    await fetch("${BASE_API}/api-notifications/mark-as-read/", {
       method: "POST",
       headers: { Authorization: `Token ${token}` }
     });
