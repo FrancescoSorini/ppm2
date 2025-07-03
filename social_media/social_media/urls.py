@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     #API urls
-    path('admin', admin.site.urls),
+    path('admin/', admin.site.urls),
 
     # Include gli URLs dall'app users
     path('api-users/', include('users.urls')),

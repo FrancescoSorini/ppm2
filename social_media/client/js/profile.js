@@ -16,7 +16,7 @@ function getToken() {
 
 // Torna alla home
 function goHome() {
-  window.location.href = "home.html";
+  window.location.href = "/home/";
 }
 
 
@@ -66,7 +66,7 @@ async function fetchProfileUser() {
   const username = getProfileUsername();
   if (!username) {
     alert("Utente non specificato.");
-    window.location.href = "home.html";
+    window.location.href = "/home/";
   }
 
   const res = await fetch(`${API_USERS}/search/?q=${username}`, {
@@ -76,7 +76,7 @@ async function fetchProfileUser() {
   const results = await res.json();
   if (!results.length) {
     alert("Utente non trovato.");
-    window.location.href = "home.html";
+    window.location.href = "/home/";
   }
 
   profileUser = results[0];

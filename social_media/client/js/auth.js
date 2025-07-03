@@ -35,7 +35,7 @@ loginForm.addEventListener('submit', async (e) => {
   const data = await res.json();
   if (res.ok && data.token) {
     setTokenCookie(data.token);
-    window.location.href = 'home.html';
+    window.location.href = '/home/';
   } else {
     messageBox.textContent = data.error || 'Credenziali non valide.';
   }
@@ -75,7 +75,7 @@ registerForm.addEventListener('submit', async (e) => {
     const loginData = await loginRes.json();
     if (loginRes.ok && loginData.token) {
       setTokenCookie(loginData.token);
-      window.location.href = 'home.html';
+      window.location.href = '/home/';
     } else {
       messageBox.textContent = 'Registrazione riuscita, ma login fallito.';
     }
