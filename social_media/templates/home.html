@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -97,6 +99,7 @@
     <p>Caricamento post...</p>
   </div>
 
-  <script src="home.js"></script>
+  <!--<script src="home.js"></script>-->
+  <script src="{% static '../client/js/home.js' %}"></script>
 </body>
 </html>

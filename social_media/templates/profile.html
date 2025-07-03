@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -103,7 +105,8 @@
   <h3>📌 Post pubblicati</h3>
   <div id="posts-container">Caricamento post...</div>
 
-  <script src="profile.js"></script>
+  <!--<script src="profile.js"></script>-->
+  <script src="{% static '../client/js/profile.js' %}"></script>
 
 </body>
 
