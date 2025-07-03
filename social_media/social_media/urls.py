@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
-
 urlpatterns = [
     #API urls
     path('admin/', admin.site.urls),
