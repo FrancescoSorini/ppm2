@@ -184,7 +184,7 @@ async function search() {
     const target = users[0];
     const confirmVisit = confirm(`Utente trovato: @${target.username}\nVuoi visitare il suo profilo?`);
     if (confirmVisit) {
-      window.location.href = `profile.html?user=${encodeURIComponent(target.username)}`;
+      window.location.href = `/profile/?user=${encodeURIComponent(target.username)}`;
     }
   } else {
     alert("Nessun utente trovato con quel nome.");
@@ -205,7 +205,7 @@ async function goToProfile() {
 
   const user = await res.json();
   const username = encodeURIComponent(user.username);
-  window.location.href = `profile.html?user=${username}`;
+  window.location.href = `/profile/?user=${username}`;
 }
 
 
@@ -228,7 +228,7 @@ async function deleteComment(commentId) {
 
 // Notifiche
 async function fetchNotifications() {
-  const res = await fetch("`${BASE_API}/api-notifications/", {
+  const res = await fetch(`${BASE_API}/api-notifications/`, {
     headers: { Authorization: `Token ${token}` }
   });
 
@@ -274,7 +274,7 @@ async function toggleNotifications() {
     await fetchNotifications();
 
     // 🔁 Segna come lette sul backend
-    await fetch("${BASE_API}/api-notifications/mark-as-read/", {
+    await fetch(`${BASE_API}/api-notifications/mark-as-read/`, {
       method: "POST",
       headers: { Authorization: `Token ${token}` }
     });
