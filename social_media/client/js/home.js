@@ -18,7 +18,7 @@ function getToken() {
 // Controlla se l'utente è loggato
 const token = getToken();
 if (!token) {
-  window.location.href = "index.html"; // reindirizza alla pagina di login se non c'è token
+  window.location.href = "/"; // reindirizza alla pagina di login se non c'è token
 }
 let currentUser = null;
 
@@ -27,7 +27,7 @@ let currentUser = null;
 function logout(message = null) {
   document.cookie = "token=; Max-Age=0; path=/"; // cancella il cookie token
   if (message) alert(message);
-  window.location.href = "index.html";
+  window.location.href = "/";
 }
 
 

@@ -4,7 +4,7 @@ const token = getToken();
 
 
 // Se non c'è token, reindirizza al login
-if (!token) window.location.href = "index.html";
+if (!token) window.location.href = "/";
 
 
 // Leggi token dal cookie
@@ -214,7 +214,7 @@ async function deleteProfile() {
   if (res.ok) {
     alert("Account eliminato.");
     document.cookie = "token=; Max-Age=0; path=/";
-    window.location.href = "index.html";
+    window.location.href = "/";
   } else {
     alert("Errore durante l'eliminazione.");
   }
@@ -431,7 +431,7 @@ async function toggleNotifications() {
 function logout(message = null) {
   document.cookie = "token=; Max-Age=0; path=/";
   if (message) alert(message);
-  window.location.href = "index.html";
+  window.location.href = "/";
 }
 
 
