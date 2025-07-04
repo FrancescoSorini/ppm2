@@ -61,7 +61,7 @@ async function fetchPosts() {
 
     div.innerHTML = `
       <h3>
-        <a href="profile.html?user=${encodeURIComponent(post.author)}">@${post.author}</a> - ${post.title}
+        <a href="/profile/?user=${encodeURIComponent(post.author)}">@${post.author}</a> - ${post.title}
       </h3>
       <p>${post.content}</p>
       <small>Creato il: ${new Date(post.created_at).toLocaleString()}</small>
@@ -73,7 +73,7 @@ async function fetchPosts() {
       ${post.comments.map(c => `
         <div class="comment">
           <strong>
-            <a href="profile.html?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
+            <a href="/profile/?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
           </strong> ${c.content}
           ${(c.author === currentUser.username || currentUser.is_staff) ? `
             <button 
@@ -194,8 +194,8 @@ async function search() {
 
 // Profilo personale utente loggato
 async function goToProfile() {
-  const res = await fetch("${API_USERS}/me", {
-    headers: { Authorization: `Token ${token}` }
+  const res = await fetch(`${API_USERS}/me`, {
+  headers: { Authorization: `Token ${token}` }
   });
 
   if (res.status === 401) {
