@@ -166,7 +166,7 @@ function showFollowList(listType) {
       const html = `
         <h4>${title} @${profileUser.username}</h4>
         <ul>
-          ${filtered.map(u => `<li><a href="profile.html?user=${u.username}">@${u.username}</a></li>`).join('')}
+          ${filtered.map(u => `<li><a href="/profile/?user=${u.username}">@${u.username}</a></li>`).join('')}
         </ul>
       `;
       document.getElementById("follow-list").innerHTML = html;
@@ -253,7 +253,7 @@ async function fetchAndDisplayPosts() {
       ${post.comments.map(c => `
         <div class="comment">
           <strong>
-            <a href="profile.html?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
+            <a href="/profile/?user=${encodeURIComponent(c.author)}">@${c.author}</a>:
           </strong> ${c.content}
           ${(c.author === currentUser.username || currentUser.is_staff) ? `
             <button 
