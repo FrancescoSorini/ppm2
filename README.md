@@ -1,4 +1,4 @@
-Api per un social media.
+API per un social media.
 Ho creato 3 app:
 - users per gestire utenti e relativi profili, login e follow
 - posts per creare e gestire post e relativi like e commenti
@@ -69,4 +69,12 @@ Esempio API per creare un post:
   "title": "Titolo del post",
   "content": "Contenuto del post"
 }
+
+-- DEPLOY su Railway.app --
+Link: https://web-production-aa257.up.railway.app/
+Appena si accede al link, si presenta la pagina di login dove ci si può loggare (se già utenti) o registraze (nuovi utenti)
+Si viene indirizzati quindi alla home page del social media, dove grazie all'interfaccia grafica si può navigare tra i profili dei vari utenti, cercare utenti e scorrere i post.
+E' stato generato un superuser accessibile con le seguenti credenziali
+User: 
+Password: 
 
