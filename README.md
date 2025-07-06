@@ -1,4 +1,14 @@
-Api per un social media.
+API per un social media per il corso di Progettazione e Produzione Multimediale
+
+-- DEPLOY su Railway.app --
+Link: https://web-production-aa257.up.railway.app/
+SCADENZA: 2 agosto 2025
+Appena si accede al link, si presenta la pagina di login dove ci si può loggare (se già utenti) o registraze (nuovi utenti)
+Si viene indirizzati quindi alla home page del social media, dove grazie all'interfaccia grafica si può navigare tra i profili dei vari utenti, cercare utenti e scorrere i post.
+E' stato generato un superuser accessibile con le seguenti credenziali
+User: fradmin
+Password: frassword
+
 Ho creato 3 app:
 - users per gestire utenti e relativi profili, login e follow
 - posts per creare e gestire post e relativi like e commenti
@@ -18,6 +28,8 @@ Il client è composto da 3 pagine principali:
 - home.html è la pagina principale che viene caricata dopo che si è effettuato il login, mostra nello header le informazioni e funzionalità per gli utenti e nel body mostra tutti i post e le relative informazioni ad essi
 - profile.html è la pagina dedicata ai profili utente, nello header mostra le loro informazioni principali e nel body i post da loro creati
 Si può navigare tra home e profili grazie a degli appositi bottoni.
+I nomi degli utenti autori di post e commenti sono cliccabili e rimandano al rispettivo profilo.
+La ricerca avviene scrivendo il nome completo e corretto di un utente (es. user1) e premendo il bottone "cerca".
 La pagina profilo di un admin può rimandare al pannello admin di Django Rest Framework.
 
 Funzionalità principali:
@@ -69,4 +81,3 @@ Esempio API per creare un post:
   "title": "Titolo del post",
   "content": "Contenuto del post"
 }
-
