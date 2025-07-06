@@ -28,6 +28,9 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-default-secret")
 #DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-aa257.up.railway.app',
+]
 
 # Application definition
 
